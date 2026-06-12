@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wallet - Depositar</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Depositar</h2>
+    <form>
+      <div class="form-group">
+        <label for="depositAmount">Monto a depositar:</label>
+        <input type="number" class="form-control" id="depositAmount" placeholder="Enter amount">
+      </div>
+      <p id="mensaje-deposito"></p>
+      <div id="alert-container"></div>
+      <button onclick="depositarDinero(event)" type="submit" class="btn btn-primary">Realizar depósito</button>
+    </form>
+    <a href="/home/ricky/Documentos/billetera_digital/menu.html" class="btn btn-secondary">Volver al Menú Principal</a>
+  </div>
+ 
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="/home/ricky/Documentos/billetera_digital/js/funciones.js"></script>
+</body>
+</html>

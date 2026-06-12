@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wallet - Enviar Dinero</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enviar Dinero</h2>
+    <form>
+      <div class="form-group">
+        <label for="searchContact">Buscar en la agenda de transferencias:</label>
+        <input type="text" class="form-control" id="searchContact" placeholder="Search contact">
+      </div>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#contactModal">
+  Agregar nuevo contacto
+</button>
+ <h3>Contactos</h3>
+<ul id="contactList" class="list-group">
+
+  <li class="list-group-item">
+    <label>
+      <input type="radio" name="contacto" value="John Doe">
+      <strong>John Doe</strong>
+      <div>CBU: 123456789, Alias: john.doe, Banco: ABC Bank</div>
+    </label>
+  </li>
+
+  <li class="list-group-item">
+    <label>
+      <input type="radio" name="contacto" value="Jane Smith">
+      <strong>Jane Smith</strong>
+      <div>CBU: 987654321, Alias: jane.smith, Banco: XYZ Bank</div>
+    </label>
+  </li>
+
+</ul>
+      <button type="button" class="btn btn-primary" onclick="enviarDineroContacto()" id="btnEnviar" style="display:none;">Enviar dinero</button>
+    </form>
+    <a href="/home/ricky/Documentos/billetera_digital/menu.html" class="btn btn-secondary">Volver al Menú Principal</a>
+  </div>
+  <div id="confirm-container" class="mt-4"></div>
+  <div id="alert-container"></div>
+  
+  <!-- Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar contacto</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <input type="text" id="newName" class="form-control mb-2" placeholder="Nombre">
+        <input type="text" id="newCBU" class="form-control mb-2" placeholder="CBU">
+        <input type="text" id="newAlias" class="form-control mb-2" placeholder="Alias">
+        <input type="text" id="newBank" class="form-control mb-2" placeholder="Banco">
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="addContact()">Guardar</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+ 
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="/home/ricky/Documentos/billetera_digital/js/funciones.js"></script>
+</body>
+</html>

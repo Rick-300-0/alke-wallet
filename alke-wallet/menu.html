@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wallet - Menú Principal</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Menú Principal</h2>
+    <div class="form-group">
+      <label for="balance">Dinero en cuenta:</label>
+      <h3 id="saldo"></h3>
+    </div>
+    <a onclick="depositar(event)" href="/home/ricky/Documentos/billetera_digital/deposit.html" class="btn btn-primary">Depositar</a>
+    <a onclick="enviarDinero(event)" href="/home/ricky/Documentos/billetera_digital/sendmoney.html" class="btn btn-primary">Enviar Dinero</a>
+    <a onclick="ultimosMovimientos(event)" href="/home/ricky/Documentos/billetera_digital/transactions.html" class="btn btn-primary">Últimos Movimientos</a>
+  </div>
+ 
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="/home/ricky/Documentos/billetera_digital/js/funciones.js"></script>
+</body>
+</html>
