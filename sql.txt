@@ -1,0 +1,240 @@
+-- Crear la base de datos
+CREATE DATABASE monedero_virtual;
+
+-- Seleccionar la base de datos
+USE monedero_virtual;
+
+-- Crear la tabla Usuario
+CREATE TABLE Usuario (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo_electronico VARCHAR(150) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    saldo DECIMAL(10,2) NOT NULL DEFAULT 0.00
+);
+
+CREATE TABLE Transaccion (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_user_id INT NOT NULL,
+    receiver_user_id INT NOT NULL,
+    importe DECIMAL(10,2) NOT NULL,
+    transaction_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_sender
+        FOREIGN KEY (sender_user_id)
+        REFERENCES Usuario(user_id),
+
+    CONSTRAINT fk_receiver
+        FOREIGN KEY (receiver_user_id)
+        REFERENCES Usuario(user_id)
+);
+
+CREATE TABLE Moneda (
+    currency_id INT AUTO_INCREMENT PRIMARY KEY,
+    currency_name VARCHAR(50) NOT NULL,
+    currency_symbol VARCHAR(10) NOT NULL
+);
+
+ALTER TABLE Usuario
+ADD currency_id INT,
+ADD CONSTRAINT fk_currency
+FOREIGN KEY (currency_id)
+REFERENCES Moneda(currency_id);
+
+SELECT u.nombre, m.currency_name
+FROM Usuario u
+JOIN Moneda m
+ON u.currency_id = m.currency_id
+WHERE u.user_id = 1;
+
+SELECT *
+FROM Transaccion;
+
+SELECT *
+FROM Transaccion
+WHERE sender_user_id = 1
+   OR receiver_user_id = 1;
+
+UPDATE Usuario
+SET correo_electronico = 'nuevocorreo@correo.com'
+WHERE user_id = 1;
+
+DELETE FROM Transaccion
+WHERE transaction_id = 1;
+
+SELECT * FROM Usuario;
+
+SELECT user_id, nombre, correo_electronico, saldo
+FROM Usuario;
+
+SELECT *
+FROM Usuario
+WHERE saldo > 1000;
+
+SELECT *
+FROM Usuario
+WHERE saldo > 500
+AND nombre LIKE 'A%';
+
+SELECT *
+FROM Usuario
+WHERE saldo BETWEEN 100 AND 1000;
+
+SELECT
+    t.transaction_id,
+    u.nombre AS remitente,
+    t.receiver_user_id,
+    t.importe,
+    t.transaction_date
+FROM Transaccion t
+INNER JOIN Usuario u
+ON t.sender_user_id = u.user_id;
+
+SELECT
+    t.transaction_id,
+    u1.nombre AS remitente,
+    u2.nombre AS destinatario,
+    t.importe,
+    t.transaction_date
+FROM Transaccion t
+INNER JOIN Usuario u1
+ON t.sender_user_id = u1.user_id
+INNER JOIN Usuario u2
+ON t.receiver_user_id = u2.user_id;
+
+SELECT
+    nombre,
+    (
+        SELECT COUNT(*)
+        FROM Transaccion t
+        WHERE t.sender_user_id = u.user_id
+    ) AS total_transacciones
+FROM Usuario u;
+
+SELECT
+    sender_user_id,
+    COUNT(*) AS cantidad_transacciones
+FROM Transaccion
+GROUP BY sender_user_id;
+
+SELECT
+    sender_user_id,
+    SUM(importe) AS total_enviado
+FROM Transaccion
+GROUP BY sender_user_id;
+
+CREATE VIEW Top5_Usuarios_Saldo AS
+SELECT
+    user_id,
+    nombre,
+    correo_electronico,
+    saldo
+FROM Usuario
+ORDER BY saldo DESC
+LIMIT 5;
+
+SELECT * FROM Top5_Usuarios_Saldo;
+
+INSERT INTO Moneda (currency_name, currency_symbol)
+VALUES
+('Peso Chileno', 'CLP'),
+('Dólar Estadounidense', 'USD'),
+('Euro', 'EUR');
+
+INSERT INTO Usuario (nombre, correo_electronico, contrasena, saldo, currency_id)
+VALUES
+('Juan Pérez', 'juan@gmail.com', '123456', 5000.00, 1),
+('María López', 'maria@gmail.com', '123456', 3500.00, 2),
+('Pedro Gómez', 'pedro@gmail.com', '123456', 4200.00, 3);
+
+
+INSERT INTO Transaccion
+(sender_user_id, receiver_user_id, importe, transaction_date)
+VALUES
+(1,2,500,NOW()),
+(2,3,250,NOW()),
+(3,1,1000,NOW());
+
+UPDATE Usuario
+SET saldo = saldo - 500
+WHERE user_id = 1;
+
+UPDATE Usuario
+SET saldo = saldo + 500
+WHERE user_id = 2;
+
+
+UPDATE Usuario
+SET saldo = saldo - 500
+WHERE user_id = 1;
+
+UPDATE Usuario
+SET saldo = saldo + 500
+WHERE user_id = 2;
+
+START TRANSACTION;
+
+-- Registrar la transacción
+INSERT INTO Transaccion
+(sender_user_id, receiver_user_id, importe, transaction_date)
+VALUES
+(1,2,500,NOW());
+
+-- Descontar saldo al remitente
+UPDATE Usuario
+SET saldo = saldo - 500
+WHERE user_id = 1;
+
+-- Agregar saldo al destinatario
+UPDATE Usuario
+SET saldo = saldo + 500
+WHERE user_id = 2;
+
+COMMIT;
+
+START TRANSACTION;
+
+UPDATE Usuario
+SET saldo = saldo - 1000
+WHERE user_id = 1;
+
+ROLLBACK;
+
+START TRANSACTION;
+
+INSERT INTO Transaccion
+(sender_user_id, receiver_user_id, importe, transaction_date)
+VALUES
+(99,2,300,NOW());
+
+ROLLBACK;
+
+
+
+CREATE PROCEDURE CargarTransacciones()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+
+    WHILE i <= 50 DO
+
+        INSERT INTO Transaccion
+        (sender_user_id, receiver_user_id, importe, transaction_date)
+        VALUES
+        (
+            FLOOR(1 + RAND()*3),
+            FLOOR(1 + RAND()*3),
+            ROUND(RAND()*1000,2),
+            NOW()
+        );
+
+        SET i = i + 1;
+
+    END WHILE;
+END $$
+
+
+
+CALL CargarTransacciones();
+
+ALTER TABLE Usuario
+ADD fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
